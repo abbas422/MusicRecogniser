@@ -22,7 +22,7 @@ namespace WebApplication1.Utilities
 
                 var youtubeService = new YouTubeService(new BaseClientService.Initializer()
                 {
-                    ApiKey = "key",//Your google API Key
+                    ApiKey = "Your key",//Your google API Key
                     ApplicationName = this.GetType().ToString()
                 });
 
