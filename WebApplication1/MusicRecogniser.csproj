@@ -20,9 +20,4 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Downloads\Music\" />
-    <Folder Include="Downloads\Videos\" />
-  </ItemGroup>
-
 </Project>
