@@ -1,0 +1,116 @@
+﻿@using System.Web;
+@using Microsoft.AspNetCore.Http
+@model List<WebApplication1.Models.VideoTempleteModel>
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<link href="~/css/Home.css" rel="stylesheet" />
+
+@*<div class="row">*@
+    <div class="row">
+        <div id="message" style="display:none; margin-bottom:10px">
+
+        </div>
+        <div id="progress" style="display:none;text-align:center">
+            <img width="100" height="100" src="~/images/Spinner1.gif" alt="Loading..." class="ajax-loader" />
+            <h5>please wait</h5>
+        </div>
+
+        <br />
+        <form id="Youtube-play-list" asp-controller="Home" asp-action="Index" method="post">
+            <input type="hidden" id="JobId" name="JobId" value="@ViewBag.JobId" />
+
+            <div class="row" style="margin:25PX;">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <input type="text" placeholder="Youtube video url" id="YoutubeUri" required name="YoutubeUri" class="form-control form-group-md border-input" />
+                        
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <input type="submit" id="submittion" class="btn btn-info btn-fill btn-md" value="submit" />
+                </div>
+               
+            </div>
+            <div class="row" style="margin:15PX;">
+                <div class="col-lg-12">
+                    <p><strong><span id="job-status"></span></strong></p>
+
+                </div>
+            </div>
+
+        </form>
+
+
+    </div>
+
+
+    @*<div class="row">
+        <div class="col-md-12">*@
+            @if (Model.Count > 0)
+    {
+        <ul>
+            @foreach (var item in Model)
+    {
+
+        <li>
+            <div class="row">
+
+               
+                <div class="col-md-4" style="margin:2px;">
+                    <a href="@item.VideoId" target="_blank">
+                        <img src="@item.Thumbnails" />
+                    </a>
+                </div>
+                
+
+                    @*<h3>Headline</h3>*@
+                    <div class="col-md-8" style="margin:2px;">
+                        <h3> @item.Title</h3>
+                    </div>
+            
+            </div>
+        </li>
+
+}
+
+
+        </ul>
+}
+        else {
+        <div class="row">
+            <div class="col-md-12">
+
+                <h3>@ViewBag?.Error</h3>
+            </div>
+        </div>
+                }
+            @*</div>*@
+            @*</div>
+
+        </div>*@
+
+            @section Scripts
+        {
+        <script src="~/lib/signalr/signalr.js"></script>
+        <script>
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/jobprogress")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+        connection.on("Index",
+            (Val) => {
+                //if (percent === 100) {
+                //    document.getElementById("job-status").innerText = "Finished!";
+                //} else {
+                document.getElementById("job-status").innerText = `${Val}`;
+                //}
+            });
+        connection.start()
+            .then(_ => connection.invoke("AssociateJob", "@ViewBag.JobId"))
+            .catch(err => console.error(err.toString()));
+        </script>
+            }
